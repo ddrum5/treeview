@@ -1,24 +1,22 @@
 package com.dinhpx.treeview.base
 
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BAdapter : RecyclerView.Adapter<BaseViewHolder>() {
+abstract class BAdapter: RecyclerView.Adapter<BaseViewHolder>() {
 
-    protected val listData = mutableListOf<Any>()
-
-    abstract fun getVH(parent: ViewGroup, viewType: Int): BaseViewHolder
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return getVH(parent, viewType)
-    }
+    protected val mListData = mutableListOf<Any>()
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.onBind(listData[position])
+        holder.onBind(mListData[position], position)
     }
 
-    override fun getItemCount(): Int = listData.size
+    override fun getItemCount(): Int = mListData.size
 
-
+    protected fun reset(listData : List<Any>) {
+        this.mListData.clear()
+        this.mListData.addAll(listData)
+        notifyDataSetChanged()
+    }
 
 }
+
