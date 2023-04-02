@@ -1,5 +1,6 @@
 package com.dinhpx.treeview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.dinhpx.treeview.base.BAdapter
@@ -23,21 +24,7 @@ class TreeAdapter : BAdapter() {
     fun setTreeData(listTreeData: List<LevelEntity>) {
         mListTreeData.clear()
         mListTreeData.addAll(listTreeData)
-//        reset(mListTreeData)
-        reset(setUpTreeView(mListTreeData))
-    }
-
-    private fun setUpTreeView(
-        listTreeData: List<LevelEntity>,
-        listAny: MutableList<Any> = mutableListOf()
-    ): List<Any> {
-        if (listTreeData.isNotEmpty()) {
-            listTreeData.forEach {
-                listAny.add(it)
-                setUpTreeView(it.children, listAny)
-            }
-        }
-        return listAny
+        reset(mListTreeData)
     }
 
 
@@ -47,28 +34,38 @@ class TreeAdapter : BAdapter() {
             mListData.addAll(position + 1, data.children)
             notifyItemRangeInserted(position + 1, data.children.size)
             data.isExpanded = true
+
         }
+
+        Log.d("Expand $position mListData Size", mListData.size.toString())
     }
 
     private fun collapseNode(position: Int) {
         val data = (mListData[position] as LevelEntity)
         if (data.children.isNotEmpty()) {
-            mListData.removeRange(position + 1, position + flatMapChildrenSize(data.children))
-            notifyItemRangeRemoved(position + 1, flatMapChildrenSize(data.children))
+            mListData.remove(position + 1, position +  flatMapChildrenSize(data.children))
+            notifyItemRangeRemoved((position + 1), flatMapChildrenSize(data.children))
             data.isExpanded = false
+
         }
+        Log.d("Collapse $position mListData Size", mListData.size.toString())
     }
 
-    private fun flatMapChildrenSize(listTreeData: List<LevelEntity>): Int {
-        /* if (listTreeData.isNotEmpty()) {
-             listTreeData.forEach {
-                 if (it.isExpanded) {
 
-                 }
-             }
-         }*/
-
-        return 0
+    private fun flatMapChildrenSize(
+        listTreeData: List<LevelEntity>,
+        listAny: MutableList<Any> = mutableListOf()
+    ): Int {
+        if (listTreeData.isNotEmpty()) {
+            listTreeData.forEach {
+                listAny.add(it)
+                if (it.isExpanded) {
+                    it.isExpanded = false
+                    flatMapChildrenSize(it.children, listAny)
+                }
+            }
+        }
+        return listAny.size
     }
 
 
@@ -107,9 +104,9 @@ class TreeAdapter : BAdapter() {
             }
         }
 
-        override fun onBind(data: Any, position: Int) {
+        override fun onBind(data: Any) {
             val levelEntity = data as LevelEntity
-            binding.tvTitle.text = levelEntity.title
+            binding.tvTitle.text = "($bindingAdapterPosition) ${levelEntity.title}"
         }
     }
 
@@ -128,18 +125,18 @@ class TreeAdapter : BAdapter() {
             }
         }
 
-        override fun onBind(data: Any, position: Int) {
+        override fun onBind(data: Any) {
             val levelEntity = data as LevelEntity
-            binding.tvTitle.text = levelEntity.title
+            binding.tvTitle.text = "($bindingAdapterPosition) ${levelEntity.title}"
         }
 
     }
 
     inner class Level2VH(private val binding: Level2Binding) : BaseViewHolder(binding) {
 
-        override fun onBind(data: Any, position: Int) {
+        override fun onBind(data: Any) {
             val levelEntity = data as LevelEntity
-            binding.tvTitle.text = levelEntity.title
+            binding.tvTitle.text = "($bindingAdapterPosition) ${levelEntity.title}"
         }
     }
 

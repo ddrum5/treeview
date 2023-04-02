@@ -31,23 +31,22 @@ class MainActivity : AppCompatActivity() {
         binding.rvTreeView.adapter = adapter
         binding.rvTreeView.layoutManager =
             WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        Handler(Looper.getMainLooper()).postDelayed({
-            adapter.setTreeData(getTreeData())
-        },2000)
+        adapter.setTreeData(getTreeData())
+
 
     }
 
     private fun getTreeData(): List<LevelEntity> {
         val listData = mutableListOf<LevelEntity>()
         for (i in 0..2) {
-            val level0 = LevelEntity(id = UUID.randomUUID().toString(), title = "vip_0", level = 0)
+            val level0 = LevelEntity(id = UUID.randomUUID().toString(), title = "Level 0", level = 0)
             for (j in 0..1) {
                 val level1 =
-                    LevelEntity(id = UUID.randomUUID().toString(), title = "vip_1", level = 1)
+                    LevelEntity(id = UUID.randomUUID().toString(), title = "Level 1", level = 1)
                 level0.children.add(level1)
                 for (k in 0..1) {
                     val level2 =
-                        LevelEntity(id = UUID.randomUUID().toString(), title = "vip_2", level = 2)
+                        LevelEntity(id = UUID.randomUUID().toString(), title = "Level 2", level = 2)
                     level1.children.add(level2)
                 }
             }

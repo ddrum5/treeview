@@ -5,5 +5,5 @@ import androidx.viewbinding.ViewBinding
 
 abstract class BaseViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    abstract fun onBind(data :Any, position: Int)
+    abstract fun onBind(data :Any)
 }
